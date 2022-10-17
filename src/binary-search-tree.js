@@ -17,6 +17,7 @@ class BinarySearchTree {
   add(data) {
     let node = new Node(data);
     let item = this.storage;
+    
     if (!this.storage) {
       this.storage = node;
     }
@@ -76,7 +77,6 @@ class BinarySearchTree {
 
   remove(data) {
     let item = this.storage;
-
     let prev_item = item;
     while (item !== null) {
       if (item.data === data) {
@@ -93,31 +93,85 @@ class BinarySearchTree {
           }
           return ;
         }
-        else if (item.right === null) {
-          Object.assign(item, item.left);
-          return ;
+        else if (item.left === null && item.right !== null) {
+          if (item.data === prev_item.data){
+            this.storage = item.right;
+            return ;
+          }
+          else if (item.data < prev_item.data) {
+            prev_item.left = item.right;
+          }
+          else if (item.data > prev_item.data) {
+            prev_item.right = item.right;
+          }
+          return;
+        }
+        else if (item.right === null && item.left !== null) {
+          if (item.data === prev_item.data){
+            this.storage = item.left;
+            return ;
+          }
+          else if (item.data < prev_item.data) {
+            prev_item.left = item.left;
+          }
+          else if (item.data > prev_item.data) {
+            prev_item.right = item.left;
+          }
+          return;
         }
         else {
-        let delElement = item;
-          item = item.right;
+
+          // if (data === this.storage.data) {
+          //   this.storage = this.storage.left;
+          //   this.storage.right = item.right;
+          //   return;
+          // }
+
+          let prevDelItem = prev_item;
+          let delItem = item;
+          let prevItem = item;
+          item = item.left;
+
           while (item !== null){
-            if (item.left === null){
-              delElement.data = item.data;
-              if (item.left === null && item.right === null && prev_item.data > item.data) {
-                prev_item.left = null;
+            if (item.right === null) {
+              if (delItem.data < prevDelItem.data) {
+                prevDelItem.left.data = item.data;
+                // prevDelItem.left = item;
               }
-              else if (item.right === null && prev_item.data > item.data){
-                prev_item.left = item.right;
-                item.left = delElement.left;
+              else if (delItem.data > prevDelItem.data) {
+                prevDelItem.right.data = item.data;
+                // prevDelItem.right = item;
               }
+              else {
+                this.storage.data = item.data;
+                // this.storage = item;
+              }
+
+              if (prevDelItem.data === prevItem.data ) {
+                if (item.left === null) {
+                  this.storage.left = null;
+                }
+                else {
+                  this.storage.left = item.left;
+                }
+              }
+              else {
+                prevItem.right = null;
+              }
+
+              // item.left = delItem.left;
+              // item.right = delItem.right;
+
               
-              return ;
+              return;
             }
-            else{
-              prev_item = item;
-              item = item.left;
+            else {
+              prevItem = item;
+              item = item.right;
             }
+            
           }
+          return;
         }
       }
       else if (data < item.data) {
@@ -131,8 +185,9 @@ class BinarySearchTree {
     }
     return ;
   }
-
   
+
+
   min() {
     if (!this.storage) {
       return null;

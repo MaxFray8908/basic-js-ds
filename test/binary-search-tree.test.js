@@ -172,6 +172,8 @@ describe('Binary search tree', () => {
       const { values } = getTestingTools(20);
       const tree = new BinarySearchTree();
       values.forEach(value => tree.add(value));
+      console.log(values);
+
       values.sort((a, b) => a % 2 - b % 2 || a - b);
       const valuesToRemove = values.splice(0, 10);
       valuesToRemove.forEach(value => tree.remove(value));
